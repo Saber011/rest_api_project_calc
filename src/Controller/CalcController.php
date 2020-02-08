@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Controller;
-
 use App\Calcualte\Calculate;
+use App\Calcualte\ParsRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,24 +44,20 @@ class CalcController extends AbstractController
     public function sum(Request $request)
     {
 
-        $data = json_decode($request->getContent(), true);
-        $request->request->replace($data);
-        $firstValue = $request->request->get('firstValue', '0');
-        $secondValue = $request->request->get('secondValue', '0');
-        $thirdValue = $request->request->get('thirdValue', null);
-        $result = Calculate::sum($firstValue, $secondValue);
-        if ($thirdValue != null) {
-            $result = Calculate::sum($result, $thirdValue);
+         $data = ParsRequest::parsRequest($request);
+         $result = Calculate::sum($data);
+        if ($data['thirdValue'] != null) {
+            $result = bcadd($result, $data['thirdValue'], 24);
             return
                 $this->json([
-                    'body' => "$firstValue + $secondValue + $thirdValue= $result" ,
+                    'body' => "$data[firstValue] + $data[secondValue] + $data[thirdValue]= $result" ,
                     'message' => 'Sum of number ' ,
                     'path' => 'src/Controller/CalcController.php' ,
                 ]);
         }
         return
             $this->json([
-                'body' => "$firstValue + $secondValue = $result" ,
+                'body' => "$data[firstValue] + $data[secondValue] = $result" ,
                 'message' => 'Sum of number ' ,
                 'path' => 'src/Controller/CalcController.php' ,
             ]);
@@ -98,16 +94,13 @@ class CalcController extends AbstractController
      */
     public function subtraction(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
-        $request->request->replace($data);
-        $firstValue = $request->request->get('firstValue', '0');
-        $secondValue = $request->request->get('secondValue', '0');
-        $result = Calculate::subtraction($firstValue, $secondValue);
-        return $this->json([
-            'body' => "$firstValue - $secondValue = $result " ,
+         $data = ParsRequest::parsRequest($request);
+         $result = Calculate::subtraction($data);
+         return $this->json([
+            'body' => "$data[firstValue] - $data[secondValue] = $result " ,
             'message' => 'Sub two number' ,
             'path' => 'src/Controller/CalcController.php' ,
-        ]);
+           ]);
     }
     /**
      * @OA\Post(
@@ -139,13 +132,10 @@ class CalcController extends AbstractController
      */
     public function multiply(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
-        $request->request->replace($data);
-        $firstValue = $request->request->get('firstValue', '5');
-        $secondValue = $request->request->get('secondValue', '5');
-        $result = Calculate::multiply($firstValue, $secondValue);
+        $data = ParsRequest::parsRequest($request);
+        $result = Calculate::multiply($data);
         return $this->json([
-            'body' => "$firstValue * $secondValue = $result" ,
+            'body' => "$data[firstValue] * $data[secondValue] = $result" ,
             'message' => 'Multiple two number ' ,
             'path' => 'src/Controller/CalcController.php' ,
         ]);

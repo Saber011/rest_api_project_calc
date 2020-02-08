@@ -6,17 +6,17 @@ namespace App\Calcualte;
 
 class Calculate
 {
-    public static function multiply($firstValue, $secondValue)
+    public static function multiply($array)
     {
-        return bcpow($firstValue, $secondValue, 20);
+        return bcpow($array['firstValue'], $array['secondValue'], 20);
     }
-    public static function subtraction($firstValue, $secondValue)
+    public static function subtraction($array)
     {
-        return bcsub($firstValue, $secondValue, 20);
+        return bcsub($array['firstValue'], $array['secondValue'], 20);
     }
-    public static function sum($firstValue, $secondValue)
+    public static function sum($array)
     {
-        return bcadd($firstValue, $secondValue, 24);
+        return bcadd($array['firstValue'], $array['secondValue'], 24);
     }
 
 }
