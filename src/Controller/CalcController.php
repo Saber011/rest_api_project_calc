@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Calcualte\Calcualte;
+use App\Calcualte\Calculate;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,9 +49,9 @@ class CalcController extends AbstractController
         $firstValue = $request->request->get('firstValue', '0');
         $secondValue = $request->request->get('secondValue', '0');
         $thirdValue = $request->request->get('thirdValue', null);
-        $result = Calcualte::sum($firstValue, $secondValue);
+        $result = Calculate::sum($firstValue, $secondValue);
         if ($thirdValue != null) {
-            $result = Calcualte::sum($result, $thirdValue);
+            $result = Calculate::sum($result, $thirdValue);
             return
                 $this->json([
                     'body' => "$firstValue + $secondValue + $thirdValue= $result" ,
@@ -102,7 +102,7 @@ class CalcController extends AbstractController
         $request->request->replace($data);
         $firstValue = $request->request->get('firstValue', '0');
         $secondValue = $request->request->get('secondValue', '0');
-        $result = Calcualte::subtraction($firstValue, $secondValue);
+        $result = Calculate::subtraction($firstValue, $secondValue);
         return $this->json([
             'body' => "$firstValue - $secondValue = $result " ,
             'message' => 'Sub two number' ,
@@ -137,19 +137,17 @@ class CalcController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function multiplay(Request $request)
+    public function multiply(Request $request)
     {
         $data = json_decode($request->getContent(), true);
         $request->request->replace($data);
         $firstValue = $request->request->get('firstValue', '5');
         $secondValue = $request->request->get('secondValue', '5');
-        $result = Calcualte::multiplay($firstValue, $secondValue);
+        $result = Calculate::multiply($firstValue, $secondValue);
         return $this->json([
             'body' => "$firstValue * $secondValue = $result" ,
             'message' => 'Multiple two number ' ,
             'path' => 'src/Controller/CalcController.php' ,
         ]);
     }
-
-
 }
