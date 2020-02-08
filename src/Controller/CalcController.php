@@ -2,15 +2,13 @@
 
 namespace App\Controller;
 
-use http\Env\Response;
-use mysql_xdevapi\Exception;
-use phpDocumentor\Reflection\DocBlock\Tags\Return_;
-use PhpParser\JsonDecoder;
+use App\Calcualte\Calcualte;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use OpenApi\Annotations as OA;
+
 /**
  * @OA\Info(title="Calc API", version="1.0.0")
  */
@@ -43,31 +41,31 @@ class CalcController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function GetSum(Request $request  )
+    public function sum(Request $request)
     {
 
         $data = json_decode($request->getContent(), true);
         $request->request->replace($data);
-        $first = $request->request->get('first', '5');
-        $second = $request->request->get('second', '5');
-        $third =$request->request->get('third', null);
-        $value = bcadd($first, $second, 20);
-        if($third != null){
-            $value =bcadd($value,$third,20);
+        $firstValue = $request->request->get('firstValue', '0');
+        $secondValue = $request->request->get('secondValue', '0');
+        $thirdValue = $request->request->get('thirdValue', null);
+        $result = Calcualte::sum($firstValue, $secondValue);
+        if ($thirdValue != null) {
+            $result = Calcualte::sum($result, $thirdValue);
             return
                 $this->json([
-                    'body' => "$first + $second + $third= $value",
-                    'message' => 'Sum of number ',
-                    'path' => 'src/Controller/CalcController.php',
+                    'body' => "$firstValue + $secondValue + $thirdValue= $result" ,
+                    'message' => 'Sum of number ' ,
+                    'path' => 'src/Controller/CalcController.php' ,
                 ]);
         }
-         return
-        $this->json([
-        'body' => "$first + $second = $value",
-        'message' => 'Sum of number ',
-        'path' => 'src/Controller/CalcController.php',
-    ]);
-}
+        return
+            $this->json([
+                'body' => "$firstValue + $secondValue = $result" ,
+                'message' => 'Sum of number ' ,
+                'path' => 'src/Controller/CalcController.php' ,
+            ]);
+    }
 
 
     /**
@@ -93,22 +91,22 @@ class CalcController extends AbstractController
      * )
      */
     /**
-    /**
-     * @Route("/api/sub", methods={"POST"})
+     * /**
+     * @Route("/api/subtraction", methods={"POST"})
      * @param Request $request
      * @return JsonResponse
      */
-    public function GetSub(Request $request)
+    public function subtraction(Request $request)
     {
         $data = json_decode($request->getContent(), true);
         $request->request->replace($data);
-        $first = $request->request->get('first', '5');
-        $second = $request->request->get('second', '5');
-        $value = bcsub($first, $second,20);
+        $firstValue = $request->request->get('firstValue', '0');
+        $secondValue = $request->request->get('secondValue', '0');
+        $result = Calcualte::subtraction($firstValue, $secondValue);
         return $this->json([
-            'body' => "$first - $second = $value ",
-            'message' => 'Sub two number ',
-            'path' => 'src/Controller/CalcController.php',
+            'body' => "$firstValue - $secondValue = $result " ,
+            'message' => 'Sub two number' ,
+            'path' => 'src/Controller/CalcController.php' ,
         ]);
     }
     /**
@@ -134,22 +132,22 @@ class CalcController extends AbstractController
      * )
      */
     /**
-    /**
-     * @Route("/api/mult", methods={"POST"})
+     * /**
+     * @Route("/api/multiplay", methods={"POST"})
      * @param Request $request
      * @return JsonResponse
      */
-    public function Mult(Request $request)
+    public function multiplay(Request $request)
     {
         $data = json_decode($request->getContent(), true);
         $request->request->replace($data);
-        $first = $request->request->get('first', '5');
-        $second = $request->request->get('second', '5');
-        $value = bcpow($first, $second,20);
+        $firstValue = $request->request->get('firstValue', '5');
+        $secondValue = $request->request->get('secondValue', '5');
+        $result = Calcualte::multiplay($firstValue, $secondValue);
         return $this->json([
-            'body' => "$first * $second = $value",
-            'message' => 'Multiple two number ',
-            'path' => 'src/Controller/CalcController.php',
+            'body' => "$firstValue * $secondValue = $result" ,
+            'message' => 'Multiple two number ' ,
+            'path' => 'src/Controller/CalcController.php' ,
         ]);
     }
 
