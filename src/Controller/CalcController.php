@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 use App\Calcualte\Calculate;
-use App\Calcualte\ParsRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,8 +43,8 @@ class CalcController extends AbstractController
     public function sum(Request $request)
     {
 
-         $data = ParsRequest::parsRequest($request);
-         $result = Calculate::sum($data);
+        $data = self::parsRequest($request);
+        $result = Calculate::sum($data);
         if ($data['thirdValue'] != null) {
             $result = bcadd($result, $data['thirdValue'], 24);
             return
@@ -94,7 +93,7 @@ class CalcController extends AbstractController
      */
     public function subtraction(Request $request)
     {
-         $data = ParsRequest::parsRequest($request);
+         $data = self::parsRequest($request);;
          $result = Calculate::subtraction($data);
          return $this->json([
             'body' => "$data[firstValue] - $data[secondValue] = $result " ,
@@ -132,7 +131,7 @@ class CalcController extends AbstractController
      */
     public function multiply(Request $request)
     {
-        $data = ParsRequest::parsRequest($request);
+        $data = self::parsRequest($request);;
         $result = Calculate::multiply($data);
         return $this->json([
             'body' => "$data[firstValue] * $data[secondValue] = $result" ,
@@ -140,4 +139,18 @@ class CalcController extends AbstractController
             'path' => 'src/Controller/CalcController.php' ,
         ]);
     }
+    public static function parsRequest(Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+        $request->request->replace($data);
+        $firstValue = $request->request->get('firstValue', '0');
+        $secondValue = $request->request->get('secondValue', '0');
+        $thirdValue = $request->request->get('thirdValue', null);
+        return $array = [
+            "firstValue" => "$firstValue",
+            "secondValue" => "$secondValue",
+            "thirdValue" => "$thirdValue",
+        ];
+    }
+
 }
